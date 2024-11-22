@@ -62,11 +62,28 @@ try {
     });
   });
 
+  app.get("/api/dua-titles", (req, res) => {
+    const catId = req.query.cat;
+    const query = "SELECT id, dua_name_en, subcat_id FROM dua WHERE cat_id = ?";
+    db.all(query, [catId], (err, rows) => {
+      if (err) {
+        res.status(500).json({
+          message: "Error fetching data",
+          statusCode: 500,
+          success: false,
+          error: err,
+        });
+      } else {
+        res.json(rows);
+      }
+    });
+  });
+
   app.get("/api/duas", (req, res) => {
-    const subCategoryId = req.query.subcat;
+    const catId = req.query.cat;
     const query =
-      "SELECT id, cat_id, subcat_id, dua_name_en, top_en, dua_arabic, transliteration_en, translation_en, bottom_en, refference_en, audio FROM dua WHERE subcat_id = ?";
-    db.all(query, [subCategoryId], (err, rows) => {
+      "SELECT id, cat_id, subcat_id, dua_name_en, top_en, dua_arabic, transliteration_en, translation_en, bottom_en, refference_en, audio FROM dua WHERE cat_id = ?";
+    db.all(query, [catId], (err, rows) => {
       if (err) {
         res.status(500).json({
           message: "Error fetching data",
